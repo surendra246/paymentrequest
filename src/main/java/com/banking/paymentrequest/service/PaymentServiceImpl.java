@@ -1,9 +1,12 @@
 package com.banking.paymentrequest.service;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.List;
 
+import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import com.banking.paymentrequest.dto.response.PaymentResponseDto;
 import com.banking.paymentrequest.entity.Customer;
 import com.banking.paymentrequest.entity.Payment;
 import com.banking.paymentrequest.enums.PaymentLinkStatus;
+import com.banking.paymentrequest.enums.PaymentType;
 import com.banking.paymentrequest.repository.CustomerRepository;
 import com.banking.paymentrequest.repository.PaymentRepository;
 import com.banking.paymentrequest.security.JwtUtil;
@@ -46,9 +50,12 @@ public class PaymentServiceImpl implements PaymentService {
 
         System.out.println("Customer response"+customer.toString());
         Payment payment = new Payment();
+        BigDecimal receivableAmount = (requestDto.getPaymentType() == PaymentType.FIXED)
+        ? requestDto.getAmount()
+        : requestDto.getReceivableAmount();
         BeanUtils.copyProperties(requestDto,payment);
+        payment.setReceivableAmount(receivableAmount);
         payment.setCustomer(customer);
-        payment.setCreatedAt(LocalDateTime.now());
         payment.setExpiryDate(LocalDateTime.now().plusDays(15));
         payment.setStatus(PaymentLinkStatus.OPEN);
         Payment savedPayment = paymentRepository.save(payment);
@@ -68,7 +75,7 @@ public class PaymentServiceImpl implements PaymentService {
         // Prepare response
 
         PaymentResponseDto responseDto = new PaymentResponseDto();
-        responseDto.setPaymentId(paymentRequestId);
+        responseDto.setPaymentRequestId(paymentRequestId);
         responseDto.setPaymentlinks(paymentLink);
         responseDto.setMessage(ResponseMessages.PAYMENT_CREATED_SUCCESS);
         return new GenericResponse<>("Created", "200", responseDto, "SUCCESS");
@@ -76,9 +83,36 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public GenericResponse<PaymentDetailsResponseDTO> getPaymentRequest(GetPaymentRequestDto requestDTO) {
-        // implementation logic here
-        return new GenericResponse<>("Fetched", "200", new PaymentDetailsResponseDTO(), "SUCCESS");
+        String paymentRequestId = requestDTO.getPaymentRequestId();
+        Payment payment = paymentRepository.findByPaymentRequestId(paymentRequestId)
+            .stream()
+            .findFirst()
+            .orElseThrow(() -> new ResourceNotFoundException("Payment not found for ID: " + paymentRequestId));
+
+        Long customerId = payment.getCustomer().getId();
+        Customer customer = customerRepository.findById(customerId)
+            .orElseThrow(() -> new ResourceNotFoundException("Customer not found for ID: " + customerId));
+
+        PaymentDetailsResponseDTO responseDTO = buildPaymentDetailsResponse(payment, customer);
+
+        return new GenericResponse<>(
+            "Payment retrieved successfully",
+            "20000",
+            responseDTO,
+            "SUCCESS"
+        );
     }
+
+    private PaymentDetailsResponseDTO buildPaymentDetailsResponse(Payment payment, Customer customer) {
+        PaymentDetailsResponseDTO dto = new PaymentDetailsResponseDTO();
+        BeanUtils.copyProperties(payment, dto);
+        dto.setCustomerId(customer.getId());
+        dto.setCustomerName(customer.getCustomerName());
+        return dto;
+    }
+
+
+
 
     public Claims extractClaimsOrThrow(String token) {
         try {

@@ -1,4 +1,4 @@
-package com.banking.paymentrequest.dto.request;
+package com.banking.paymentrequest.dto.response;
 
 import lombok.Data;
 

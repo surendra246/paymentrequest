@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.banking.paymentrequest.dto.response.GenericResponse;
 import com.banking.paymentrequest.security.JwtUtil;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -20,7 +22,7 @@ public class AuthController {
     }
 
    @GetMapping("/token")
-    public ResponseEntity<GenericResponse<String>> getToken(@RequestParam String email, @RequestParam String phone) {
+    public ResponseEntity<GenericResponse<String>> getToken(@Valid @RequestParam String email, @RequestParam String phone) {
         String token = jwtUtil.generateToken(email, phone);
         GenericResponse<String> response = new GenericResponse<>(
             "Token generated successfully",
