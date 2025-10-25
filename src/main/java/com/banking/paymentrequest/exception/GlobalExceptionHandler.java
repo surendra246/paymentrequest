@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -130,6 +131,17 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.badRequest().body(response);
+    }
+    
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<GenericResponse<Object>> handleResourceNotFound(ResourceNotFoundException ex) {
+        GenericResponse<Object> response = new GenericResponse<>(
+            ex.getMessage(),
+            "40400",
+            null,
+            "FAILURE"
+        );
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }
 

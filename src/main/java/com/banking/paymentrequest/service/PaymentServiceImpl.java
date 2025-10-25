@@ -83,12 +83,16 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public GenericResponse<PaymentDetailsResponseDTO> getPaymentRequest(GetPaymentRequestDto requestDTO) {
         String paymentRequestId = requestDTO.getPaymentRequestId();
+
         Payment payment = paymentRepository.findByPaymentRequestId(paymentRequestId)
             .stream()
             .findFirst()
             .orElseThrow(() -> new ResourceNotFoundException("Payment not found for ID: " + paymentRequestId));
+        
+        System.out.println(payment);
 
         Long customerId = payment.getCustomer().getId();
+
         Customer customer = customerRepository.findById(customerId)
             .orElseThrow(() -> new ResourceNotFoundException("Customer not found for ID: " + customerId));
 
@@ -101,6 +105,7 @@ public class PaymentServiceImpl implements PaymentService {
             "SUCCESS"
         );
     }
+
 
     private PaymentDetailsResponseDTO buildPaymentDetailsResponse(Payment payment, Customer customer) {
         PaymentDetailsResponseDTO dto = new PaymentDetailsResponseDTO();

@@ -15,8 +15,4 @@ public class GetPaymentRequestDto {
     @NotBlank(message = "Payment request id is required")
     @JsonProperty("payment_request_id")
     private String paymentRequestId;
-
-    public void setPaymentRequestId(String id) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }
