@@ -1,6 +1,6 @@
 package com.banking.paymentrequest.enums;
 
-public enum ApplicationStatus {
+public enum PaymentStatus {
     PENDING,
     APPROVED,
     REJECTED
