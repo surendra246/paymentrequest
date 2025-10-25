@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.BeanUtils;
@@ -107,7 +106,7 @@ public class PaymentServiceImpl implements PaymentService {
         PaymentDetailsResponseDTO dto = new PaymentDetailsResponseDTO();
         BeanUtils.copyProperties(payment, dto);
         dto.setCustomerId(customer.getId());
-        dto.setCustomerName(customer.getCustomerName());
+        dto.setCustomerName(customer.getName());
         return dto;
     }
 
