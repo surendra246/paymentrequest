@@ -64,7 +64,7 @@ public class PaymentServiceImpl implements PaymentService {
         byte[] bytes = new byte[24];
         random.nextBytes(bytes);
         String paymentRequestId = Base62Util.encode(bytes);
-        String paymentLink = "https://localhost:8080/api/payments/" + paymentRequestId;
+        String paymentLink = "http://localhost:8080/api/payments/" + paymentRequestId;
 
         // after insertion
         savedPayment.setPaymentRequestId(paymentRequestId);
