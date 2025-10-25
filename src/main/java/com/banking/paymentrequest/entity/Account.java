@@ -41,6 +41,7 @@ public class Account {
         if (currentBalance == null) currentBalance = 10000.0;
     }
     private AccountStatus status;
+
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;

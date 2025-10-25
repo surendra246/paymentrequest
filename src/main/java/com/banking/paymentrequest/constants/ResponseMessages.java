@@ -6,7 +6,7 @@ public final class ResponseMessages {
 
 
     // Success messages
-    public static final String APPLICATION_SUBMITTED = "Loan application submitted successfully";
+    public static final String APPLICATION_SUBMITTED = "Customer Account Creation Request submitted successfully";
     public static final String CUSTOMER_CREATED = "Customer created successfully";
 
     // Duplicate messages
