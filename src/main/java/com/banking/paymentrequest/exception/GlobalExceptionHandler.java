@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.banking.paymentrequest.constants.ErrorCodes;
 import com.banking.paymentrequest.constants.ErrorMessages;
@@ -61,6 +62,19 @@ public class GlobalExceptionHandler {
             List.of(ex.getMessage()),
             "FAILED"
         ));
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<GenericResponse<Object>> handleUnauthorized(ResponseStatusException ex) {
+        int statusCode = ex.getStatusCode().value();
+        HttpStatus status = HttpStatus.valueOf(statusCode);
+        GenericResponse<Object> response = new GenericResponse<>(
+            ex.getReason(), 
+            String.valueOf(status.value()), 
+            null,     
+            "FAILURE"
+        );
+        return ResponseEntity.status(status).body(response);
     }
 
     @ExceptionHandler(Exception.class)
