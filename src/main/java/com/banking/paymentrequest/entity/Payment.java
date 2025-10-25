@@ -22,8 +22,11 @@ public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "payment_id", updatable = false, nullable = false)
+    @Column(name="payment_id")
     private UUID paymentId;
+
+    @Column(name="payment_request_id")
+    private String paymentRequestId;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
@@ -39,7 +42,7 @@ public class Payment {
     private PaymentType payment_type;
 
     @Column(name="payment_link")
-    private String payment_link;
+    private String paymentLink;
 
     @Column(name="status")
     private PaymentLinkStatus status;

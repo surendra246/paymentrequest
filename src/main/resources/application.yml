@@ -5,9 +5,9 @@ spring:
   application:
         name: loanapp
   datasource:
-    url: jdbc:mysql://localhost:3306/paymentrequest_db
+    url: jdbc:mysql://localhost:3306/payment_db
     username: root
-    password: password
+    password: Rohit@1996
     driver-class-name: com.mysql.cj.jdbc.Driver
   
 
