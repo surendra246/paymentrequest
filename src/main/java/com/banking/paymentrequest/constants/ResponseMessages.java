@@ -6,6 +6,7 @@ public final class ResponseMessages {
 
 
     // Success messages
+    public static final String APPLICATION_SUBMITTED = "Customer Account Creation Request submitted successfully";
     public static final String PAYMENT_CREATED_SUCCESS = "Payment link has been successfully";
     public static final String CUSTOMER_CREATED = "Customer created successfully";
 

@@ -30,5 +30,4 @@ public class TransactionLog {
     @Column(name="created_at")
     private LocalDateTime createdAt;
 
-
 }
